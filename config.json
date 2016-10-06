@@ -4,6 +4,114 @@
     "error": "/var/log/v2ray/error.log",
     "loglevel": "warning"
   },
+  "inbound": {
+    "port": 19917,
+    "listen":"0.0.0.0",
+    "protocol": "vmess",
+    "settings": {
+      "clients": [  
+        {
+          "id": "5e47e4dc-e21c-4f67-b50b-5610ccee36ae",
+          "level": 1,
+          "alterId": 100
+        },
+        {
+          "id": "369d3a43-a7a2-44b6-8843-09415467f141",
+          "level": 1,
+          "alterId": 100
+        }
+      ],
+      "features": {           
+        "detour": {             
+          "to": "detourHandler"
+        }
+      }
+    },
+    "streamSettings":{
+      "network": "tcp",
+      "security": "tls",
+      "tlsSettings": {
+        "certificates": [
+          {
+            "certificateFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/fullchain.pem",
+            "keyFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/privkey.pem"
+          }
+        ]
+      }
+    }
+  },
+  "outbound": {
+    "sendThrough":"0.0.0.0",
+    "protocol": "freedom",
+    "settings": {}
+  },
+  "inboundDetour":[
+    {
+      "protocol": "vmess",
+      "port": "19918-20200",  
+      "tag": "detourHandler", 
+      "listen":"0.0.0.0",
+      "allocate": {           
+        "strategy": "random", 
+        "concurrency": 2,    
+        "refresh": 5         
+      },
+      "settings":{
+        "clients": [  
+          {
+            "id": "5e47e4dc-e21c-4f67-b50b-5610ccee36ae",
+            "level": 1,
+            "alterId": 100
+          },
+          {
+            "id": "369d3a43-a7a2-44b6-8843-09415467f141",
+            "level": 1,
+            "alterId": 100
+          }
+        ]
+      },
+      "streamSettings":{
+        "network":"tcp",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/fullchain.pem",
+              "keyFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/privkey.pem"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "protocol": "shadowsocks",
+      "port": 20201,
+      "tag": "shadowsock_1", 
+      "settings": {
+        "method": "chacha20",
+        "password": "yihannanjing2013",
+        "udp": true
+      }      
+    },
+    {
+      "protocol": "shadowsocks",
+      "port": 20202,
+      "tag": "shadowsock_2", 
+      "settings": {
+        "method": "chacha20",
+        "password": "shadowsocks2016_1",
+        "udp": true
+      }
+    }
+  ],
+  "outboundDetour": [
+    {
+      "protocol": "blackhole",
+      "sendThrough":"0.0.0.0",
+      "tag": "blocked",
+      "settings": {}
+    }
+  ],
   "routing": {          
     "strategy": "rules",
     "settings": {
@@ -53,144 +161,6 @@
       ]
     }
   },
-  "inbound": {
-    "port": 19917,
-    "listen":"127.0.0.1",
-    "protocol": "vmess",
-    "settings": {
-      "clients": [  
-        {
-          "id": "5e47e4dc-e21c-4f67-b50b-5610ccee36ae",
-          "level": 1,
-          "alterId": 100
-        },
-        {
-          "id": "369d3a43-a7a2-44b6-8843-09415467f141",
-          "level": 1,
-          "alterId": 100
-        }
-      ],
-      "features": {           
-        "detour": {             
-          "to": "detourHandler"
-        }
-      }
-    },
-    "streamSettings":{
-      "network": "tcp",
-      "security": "none",
-      "tlsSettings": {
-        "certificates": [
-          {
-            "certificateFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/fullchain.pem",
-            "keyFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/privkey.pem"
-          }
-        ]
-      }
-    }
-  },
-  "outbound": {
-    "sendThrough":"127.0.0.1",
-    "protocol": "freedom",
-    "settings": {},
-    "streamSettings":{
-      "network":"tcp"
-    }
-  },
-  "inboundDetour":[
-    {
-      "protocol": "vmess",
-      "port": "19918-20200",  
-      "tag": "detourHandler", 
-      "listen":"127.0.0.1",
-      "allocate": {           
-        "strategy": "random", 
-        "concurrency": 2,    
-        "refresh": 5         
-      },
-      "settings":{
-        "clients": [  
-          {
-            "id": "5e47e4dc-e21c-4f67-b50b-5610ccee36ae",
-            "level": 1,
-            "alterId": 100
-          },
-          {
-            "id": "369d3a43-a7a2-44b6-8843-09415467f141",
-            "level": 1,
-            "alterId": 100
-          }
-        ]
-      },
-      "streamSettings":{
-        "network":"tcp",
-        "security": "none",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "certificateFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/fullchain.pem",
-              "keyFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/privkey.pem"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "protocol": "shadowsocks",
-      "port": 20201,
-      "tag": "shadowsock_1", 
-      "settings": {
-        "method": "chacha20",
-        "password": "yihannanjing2013",
-        "udp": true
-      },
-      "streamSettings":{
-        "network": "tcp",
-        "security": "none",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "certificateFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/fullchain.pem",
-              "keyFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/privkey.pem"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "protocol": "shadowsocks",
-      "port": 20202,
-      "tag": "shadowsock_2", 
-      "settings": {
-        "method": "chacha20",
-        "password": "shadowsocks2016_1",
-        "udp": true
-      },
-      "streamSettings":{
-        "network":"tcp",
-        "security": "none",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "certificateFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/fullchain.pem",
-              "keyFile": "/etc/letsencrypt/live/www.zhuzhouxinrui.com/privkey.pem"
-            }
-          ]
-        }
-      }
-    }
-  ],
-  "outboundDetour": [
-    {
-      "protocol": "blackhole",
-      "sendThrough":"127.0.0.1",
-      "tag": "blocked",
-      "settings": {},
-      "streamSettings":{
-        "network":"tcp"
-      }
-    }
-  ],
   "transport":{
     "tcpSettings": {
       "connectionReuse": true
@@ -198,14 +168,18 @@
     "kcpSettings": {
       "mtu": 1400,
       "tti": 50,
-      "uplinkCapacity": 1,
+      "uplinkCapacity": 3,
       "downlinkCapacity": 100,
-      "congestion": true,
+      "congestion": false,
       "readBufferSize": 1,
       "writeBufferSize": 1,
       "header": {
         "type": "utp"
       }
+    },
+    "wsSettings": {
+      "connectionReuse": true,
+      "path": "http://www.zhuzhouxinrui.com"
     }
   }
 }
