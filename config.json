@@ -29,7 +29,7 @@
     },
     "streamSettings":{
       "network": "tcp",
-      "security": "tls",
+      "security": "none",
       "tlsSettings": {
         "certificates": [
           {
@@ -72,7 +72,7 @@
       },
       "streamSettings":{
         "network":"tcp",
-        "security": "tls",
+        "security": "none",
         "tlsSettings": {
           "certificates": [
             {
